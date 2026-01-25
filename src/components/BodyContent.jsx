@@ -409,7 +409,7 @@ const BodyContent = ({ onLottoClick }) => {
                     slidesPerGroup={1} 
                     spaceBetween={isMobile ? 50 : 60}
                     slideToClickedSlide={true}
-                    autoplay={{ delay: 3500, disableOnInteraction: false }}
+                    autoplay={{ delay: 7000, disableOnInteraction: false }}
                     coverflowEffect={{ 
                         rotate: 0, 
                         stretch: 0, 
@@ -583,5 +583,6 @@ const BodyContent = ({ onLottoClick }) => {
     </>
   );
 };
+
 
 export default BodyContent;
