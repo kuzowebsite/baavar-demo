@@ -279,7 +279,7 @@ const PurchaseDialog = ({
       case 1: return "Утасны дугаар";
       case 2: return "Баталгаажуулах";
       case 3: return "Тоо ширхэг";
-      case 4: return "Захиалга хянах";
+      case 4: return "Баталгаажуулах";
       case 5: return "Төлбөрийн нөхцөл";
       case 6: return isPaymentSuccess ? "Амжилттай" : "QPay";
       case 7: return "Банк";
@@ -610,5 +610,6 @@ const PurchaseDialog = ({
     </>
   );
 };
+
 
 export default PurchaseDialog;
