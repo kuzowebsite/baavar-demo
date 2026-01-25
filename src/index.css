@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* Хэрэв танд нэмэлт фонт эсвэл стиль байгаа бол доор нь бичиж болно */
+/* index.css дотор нэмнэ */
+
+@layer utilities {
+  /* ========================================
+   HYPER-REALISTIC GOLD TEXT
+   Үгэн дээр ашиглах хэт бодит гялалзсан алт
+   ========================================
+  */
+  .text-gold-glitter {
+    /* Илүү олон өнгөний шилжилттэй, хурц контрасттай градиент */
+    background: linear-gradient(
+      75deg,
+      #a37505 0%,   /* Гүн бор алт (сүүдэр) */
+      #e3b449 20%,  /* Дулаан алт */
+      #fffdb8 45%,  /* Хурц цагаан гэрэл (гялбаа) */
+      #FFFFFF 50%,  /* Яг төвдөө цэвэр цагаан */
+      #fffdb8 55%, 
+      #dcb049 75%,  /* Баялаг алт */
+      #a37505 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Текстийн араас бага зэрэг алтан гэрэл цацруулах */
+    filter: drop-shadow(0px 0px 2px rgba(255, 215, 0, 0.5));
+    display: inline-block;
+  }
+
+  /* Текстийг амьд мэт хөдөлгөх (Optional) */
+  .animate-gold-shine {
+            animation: shine 4s linear infinite;
+  }
+
+  /* ========================================
+   LIQUID GOLD BORDER & BACKGROUNDS
+   Хүрээ, товчлуур дээр ашиглах "шингэн алт" мэт эффект
+   ========================================
+  */
+  .bg-gold-foil {
+    /* Металл гадаргуу дээр гэрэл ойж байгаа мэт диагонал градиент */
+    background: linear-gradient(
+        45deg,
+        #8a611d 0%, 
+        #e3b449 20%, 
+        #fff8a6 40%, /* Гэрэл */
+        #d4af37 50%, 
+        #fdfc47 60%, /* Гэрэл */
+        #9e7622 80%, 
+        #8a611d 100%
+    );
+    background-size: 300% 300%;
+    /* Дотор болон гадна талдаа гэрэлтэх эффект */
+    box-shadow: 
+      inset 0 0 8px rgba(255, 255, 200, 0.4), /* Дотор талын гэрэл */
+      0 4px 15px rgba(184, 134, 11, 0.4); /* Гадна талын сүүдэр */
+  }
+  
+  .animate-foil-shine:hover {
+    animation: shine 3s infinite linear;
+  }
+
+  @keyframes shine {
+    to {
+      background-position: 200% center;
+    }
+  }
+}
+
+@layer utilities {
+  @keyframes float {
+    0% { transform: translateY(0px) scale(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+  }
+  
+  @keyframes sheen {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+  }
+}
+
+/* ========================================
+   CUSTOM LUXURY GOLD SCROLLBAR
+   Хөтчийн гүйлгэх зурвасыг алтан болгох
+   ========================================
+*/
+
+html {
+  scrollbar-width: thin;
+  /* Firefox-д зураг дэмждэггүй тул хамгийн ойр өнгийг зааж өгнө */
+  scrollbar-color: #E0E0E0 #0A0A0A;
+}
+
+/* Chrome, Edge, Safari-д зориулсан тохиргоо */
+::-webkit-scrollbar {
+  width: 12px; /* Зураг харагдах учраас өргөнийг нь бага зэрэг нэмэв */
+}
+
+/* Гүйлгэх зурвасын арын дэвсгэр (Track) */
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+/* Гүйлгэх товчлуур (Thumb) дээр зураг оруулах */
+::-webkit-scrollbar-thumb {
+  /* Зураг оруулах хэсэг */
+  background-image: url('/background.svg'); 
+  
+  /* Зургийг хэрхэн харуулах тохиргоо */
+  background-size: cover;       /* Зургийг дүүргэж харуулна */
+  background-position: center;  /* Төв хэсгийг харуулна */
+  background-repeat: no-repeat;
+  
+  border-radius: 10px;
+  /* Зураг болон ирмэг хооронд зай гаргах */
+  border: 2px solid #0a0a0a; 
+}
+
+/* Хулгана хүргэх үед зургийг бага зэрэг тодруулах эсвэл өөрчлөх */
+::-webkit-scrollbar-thumb:hover {
+  /* Хэрэв хүсвэл hover дээр өөр зураг эсвэл гэрэлтүүлэг нэмж болно */
+  filter: brightness(1.2); 
+  cursor: pointer;
+}
