@@ -76,10 +76,10 @@ const PurchaseDialog = ({
   const [quantity, setQuantity] = useState(initialQuantity);
   const [phoneNumber, setPhoneNumber] = useState('');
   
-  // OTP States
+  // OTP States - Хугацааг 60 секунд болгосон
   const [otpInput, setOtpInput] = useState('');
   const [generatedOtp, setGeneratedOtp] = useState(null);
-  const [otpTimeLeft, setOtpTimeLeft] = useState(180); // 3 minutes for OTP input
+  const [otpTimeLeft, setOtpTimeLeft] = useState(60); 
   const [isOtpExpired, setIsOtpExpired] = useState(false);
 
   // Global Session Timer
@@ -162,11 +162,9 @@ const PurchaseDialog = ({
   // --- HANDLERS ---
   
   const handlePhoneInput = (e) => {
-    // Зөвхөн тоо авна
     let raw = e.target.value.replace(/\D/g, ''); 
     if (raw.length > 8) raw = raw.slice(0, 8); 
 
-    // 4 оронгийн дараа зай авах формат: "8888 8888"
     let formatted = raw;
     if (raw.length > 4) {
         formatted = raw.slice(0, 4) + ' ' + raw.slice(4);
@@ -175,14 +173,14 @@ const PurchaseDialog = ({
   };
 
   const handleOtpInput = (e) => {
-    if (isOtpExpired) return; // Expired бол бичүүлэхгүй
+    if (isOtpExpired) return; 
     let raw = e.target.value.replace(/\D/g, ''); 
     if (raw.length > 4) raw = raw.slice(0, 4); 
     setOtpInput(raw); 
   };
 
   const handleResendOtp = () => {
-      setOtpTimeLeft(180); // Reset to 3 mins
+      setOtpTimeLeft(60); // 1 минут болгож шинэчилсэн
       setIsOtpExpired(false);
       setOtpInput('');
       const demoCode = "1234";
@@ -191,13 +189,11 @@ const PurchaseDialog = ({
   };
 
   const handleNext = () => {
-    // 1. Phone -> OTP
     if (currentStep === 1) {
         if (!isPhoneValid) return;
-        // Start OTP process
         const demoCode = "1234";
         setGeneratedOtp(demoCode);
-        setOtpTimeLeft(180); // 3 mins start
+        setOtpTimeLeft(60); // 1 минут эхлэх
         setIsOtpExpired(false);
         setOtpInput('');
         
@@ -206,7 +202,6 @@ const PurchaseDialog = ({
         return;
     }
 
-    // 2. OTP -> Quantity
     if (currentStep === 2) {
         if (isOtpExpired) {
             alert("Кодын хугацаа дууссан байна. Дахин код авна уу.");
@@ -220,13 +215,11 @@ const PurchaseDialog = ({
         return;
     }
 
-    // 3. Quantity -> Confirmation
     if (currentStep === 3) {
         setCurrentStep(4);
         return;
     }
 
-    // 4. Confirmation -> (Free: Success / Paid: Payment)
     if (currentStep === 4) {
         const nums = generateLuckyNumbers(quantity);
         setLuckyNumbers(nums);
@@ -236,7 +229,7 @@ const PurchaseDialog = ({
             setTimeout(() => {
                 setIsLoading(false);
                 setIsPaymentSuccess(true);
-                setCurrentStep(8); // Free Success
+                setCurrentStep(8); 
             }, 1000);
             return;
         } else {
@@ -245,7 +238,6 @@ const PurchaseDialog = ({
         }
     }
 
-    // 5. Payment Method -> QPay/Bank
     if (currentStep === 5) {
         if (selectedPaymentMethod === 'qpay') setCurrentStep(6);
         else setCurrentStep(7);
@@ -305,7 +297,7 @@ const PurchaseDialog = ({
   // --- RENDER STEPS ---
   const renderContent = () => {
     switch (currentStep) {
-      case 1: // Phone Input
+      case 1: 
         return (
           <div className="flex flex-col items-center w-full justify-center h-full">
             <p className="text-center mb-[6px] text-xs font-play">
@@ -315,22 +307,20 @@ const PurchaseDialog = ({
               type="text"
               value={phoneNumber}
               onChange={handlePhoneInput}
-              placeholder="8090 1860" // Placeholder with space
-              className="w-[320px] h-[30px] rounded-[8px] border border-[#D9D9D9] bg-white font-play text-sm text-center outline-none text-black tracking-wide"
+              placeholder="8090 1860" 
+              className="w-full max-w-[320px] h-[30px] rounded-[8px] border border-[#D9D9D9] bg-white font-play text-sm text-center outline-none text-black tracking-wide"
               autoFocus
             />
           </div>
         );
 
-      case 2: // OTP Input (Modified)
+      case 2: 
         return (
             <div className="flex flex-col items-center w-full justify-center h-full">
                 <p className="text-center mb-[6px] text-xs font-play">
                     Таны {phoneNumber} дугаарт илгээсэн 4 оронтой кодыг оруулна уу
                 </p>
-                
                 <div className="flex items-center gap-2">
-                    {/* OTP INPUT */}
                     <input
                         type="text"
                         value={otpInput}
@@ -343,15 +333,12 @@ const PurchaseDialog = ({
                         }`}
                         autoFocus
                     />
-                    
-                    {/* OTP TIMER */}
                     <div className={`w-[60px] h-[35px] rounded-[8px] border flex items-center justify-center text-sm font-bold font-play ${
                         isOtpExpired ? 'border-red-200 text-red-500 bg-red-50' : 'border-[#D9D9D9] text-[#068071] bg-gray-50'
                     }`}>
                         {formatTimer(otpTimeLeft)}
                     </div>
                 </div>
-
                 {isOtpExpired ? (
                      <div className="mt-2 flex flex-col items-center">
                         <span className="text-[10px] text-red-500 font-play mb-1">Хугацаа дууссан!</span>
@@ -363,14 +350,12 @@ const PurchaseDialog = ({
                         </button>
                      </div>
                 ) : (
-                    <p className="text-[10px] text-gray-400 mt-2">
-                         Код хүчинтэй хугацаа
-                    </p>
+                    <p className="text-[10px] text-gray-400 mt-2">Код хүчинтэй хугацаа</p>
                 )}
             </div>
         );
 
-      case 3: // Quantity
+      case 3: 
         return (
           <div className="flex flex-col items-center w-full justify-center h-full">
             <p className="text-center mb-[6px] text-xs font-play px-8">
@@ -386,11 +371,9 @@ const PurchaseDialog = ({
               >
                 <Icons.Minus />
               </button>
-              
               <div className="w-[80px] h-[30px] flex items-center justify-center border border-[#D9D9D9] rounded-[8px] text-base font-bold text-gray-800 bg-white">
                 {quantity}
               </div>
-
               <button 
                 onClick={() => setQuantity(q => q + 1)}
                 disabled={isFree}
@@ -399,15 +382,11 @@ const PurchaseDialog = ({
                 {isFree ? <Icons.Lock /> : <Icons.Plus />}
               </button>
             </div>
-            {isFree && (
-                <span className="text-[10px] text-[#068071] mt-2 font-bold font-play">
-                    Тогтмол 1 эрх
-                </span>
-            )}
+            {isFree && <span className="text-[10px] text-[#068071] mt-2 font-bold font-play">Тогтмол 1 эрх</span>}
           </div>
         );
 
-      case 4: // Confirmation
+      case 4: 
         return (
           <div className="flex flex-col w-full px-6 justify-center h-full">
             <div className="space-y-1 w-full max-w-[320px] mx-auto">
@@ -425,9 +404,7 @@ const PurchaseDialog = ({
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-800 font-medium text-[11px] font-play">Нийт төлөх дүн:</span>
-                <span className="text-gray-900 font-bold text-right text-[12px] font-play">
-                    {isFree ? "0₮ (Үнэгүй)" : formatMoney(totalPrice)}
-                </span>
+                <span className="text-gray-900 font-bold text-right text-[12px] font-play">{isFree ? "0₮ (Үнэгүй)" : formatMoney(totalPrice)}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-800 font-medium text-[11px] font-play">Утасны дугаар:</span>
@@ -437,71 +414,52 @@ const PurchaseDialog = ({
           </div>
         );
 
-      case 5: // Payment Selection
+      case 5: 
         return (
           <div className="flex flex-col items-center w-full justify-center h-full gap-2">
             <button
               onClick={() => setSelectedPaymentMethod('qpay')}
-              className={`w-[320px] h-[30px] border rounded-[8px] px-3 flex items-center justify-center relative transition-colors ${
+              className={`w-full max-w-[320px] h-[30px] border rounded-[8px] px-3 flex items-center justify-center relative transition-colors ${
                 selectedPaymentMethod === 'qpay' ? 'border-[#068071]' : 'border-[#D9D9D9] hover:border-gray-400'
               }`}
             >
-              <div className="absolute left-3">
-                 <Icons.CheckSquare checked={selectedPaymentMethod === 'qpay'} />
-              </div>
-              <span className={`font-bold text-[12px] font-play ${selectedPaymentMethod === 'qpay' ? 'text-[#068071]' : 'text-gray-700'}`}>
-                QPay
-              </span>
+              <div className="absolute left-3"><Icons.CheckSquare checked={selectedPaymentMethod === 'qpay'} /></div>
+              <span className={`font-bold text-[12px] font-play ${selectedPaymentMethod === 'qpay' ? 'text-[#068071]' : 'text-gray-700'}`}>QPay</span>
             </button>
-
             <button
               onClick={() => setSelectedPaymentMethod('bank')}
-              className={`w-[320px] h-[30px] border rounded-[8px] px-3 flex items-center justify-center relative transition-colors ${
+              className={`w-full max-w-[320px] h-[30px] border rounded-[8px] px-3 flex items-center justify-center relative transition-colors ${
                 selectedPaymentMethod === 'bank' ? 'border-[#068071]' : 'border-[#D9D9D9] hover:border-gray-400'
               }`}
             >
-              <div className="absolute left-3">
-                 <Icons.CheckSquare checked={selectedPaymentMethod === 'bank'} />
-              </div>
-              <span className={`font-bold text-[12px] font-play ${selectedPaymentMethod === 'bank' ? 'text-[#068071]' : 'text-gray-700'}`}>
-                Банкаар төлөх
-              </span>
+              <div className="absolute left-3"><Icons.CheckSquare checked={selectedPaymentMethod === 'bank'} /></div>
+              <span className={`font-bold text-[12px] font-play ${selectedPaymentMethod === 'bank' ? 'text-[#068071]' : 'text-gray-700'}`}>Банкаар төлөх</span>
             </button>
           </div>
         );
 
-      case 6: // QPay Scan
+      case 6: 
         return (
           <div className="flex flex-col items-center w-full pt-2 px-4 pb-4">
-            <p className="text-[10px] text-center font-play text-gray-600 mb-1">
-              Санамсаргүй сонгогдсон таны азын дугаарууд:
-            </p>
+            <p className="text-[10px] text-center font-play text-gray-600 mb-1">Санамсаргүй сонгогдсон таны азын дугаарууд:</p>
             <div className="flex flex-wrap justify-center gap-1 mb-2 max-w-[320px]">
                 {luckyNumbers.map((num, idx) => (
-                    <span key={idx} className="bg-gray-100 text-[#068071] border border-gray-200 px-2 py-0.5 rounded text-[11px] font-bold font-play">
-                        {num}
-                    </span>
+                    <span key={idx} className="bg-gray-100 text-[#068071] border border-gray-200 px-2 py-0.5 rounded text-[11px] font-bold font-play">{num}</span>
                 ))}
             </div>
-
             {isPaymentSuccess ? (
                 <div className="bg-white p-4 rounded border border-gray-200 mb-3 flex flex-col items-center animate-pulse">
                       <Icons.Success />
                       <span className="text-[#068071] font-bold font-play text-sm mt-2">Төлбөр амжилттай!</span>
                 </div>
             ) : (
-                <div className="bg-white p-1 rounded border border-gray-200 mb-3">
-                      <Icons.QrCode />
-                </div>
+                <div className="bg-white p-1 rounded border border-gray-200 mb-3"><Icons.QrCode /></div>
             )}
-
             {!isPaymentSuccess && (
                 <div className="flex items-center gap-3 opacity-60">
                     {['Khan', 'Golomt', 'TDB', 'State'].map((bank, i) => (
                         <div key={i} className="flex flex-col items-center gap-0.5">
-                            <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[8px] font-bold text-gray-500 overflow-hidden">
-                               {bank[0]}
-                            </div>
+                            <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-[8px] font-bold text-gray-500 overflow-hidden">{bank[0]}</div>
                             <span className="text-[8px] font-play text-gray-500">{bank}</span>
                         </div>
                     ))}
@@ -510,64 +468,37 @@ const PurchaseDialog = ({
           </div>
         );
 
-      case 7: // Bank Transfer
+      case 7: 
         return (
           <div className="flex flex-col w-full pt-2 px-6 justify-start h-full">
             <div className="w-full flex flex-col items-center mb-4">
-                  <p className="text-[10px] text-center font-play text-gray-600 mb-1">
-                   Танд хуваарилагдсан азын дугаарууд:
-                </p>
+                <p className="text-[10px] text-center font-play text-gray-600 mb-1">Танд хуваарилагдсан азын дугаарууд:</p>
                 <div className="flex flex-wrap justify-center gap-1 max-w-[320px]">
                     {luckyNumbers.map((num, idx) => (
-                        <span key={idx} className="bg-gray-100 text-[#068071] border border-gray-200 px-2 py-0.5 rounded text-[11px] font-bold font-play">
-                            {num}
-                        </span>
+                        <span key={idx} className="bg-gray-100 text-[#068071] border border-gray-200 px-2 py-0.5 rounded text-[11px] font-bold font-play">{num}</span>
                     ))}
                 </div>
             </div>
-
             <div className="space-y-1 w-full max-w-[320px] mx-auto">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-800 font-medium text-[11px] font-play">Банк:</span>
-                <span className="text-gray-900 font-bold text-right text-[12px] font-play">Хаан банк</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-800 font-medium text-[11px] font-play">Дансны дугаар:</span>
-                <span className="text-gray-900 font-bold text-right text-[12px] font-play">5318101209</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-800 font-medium text-[11px] font-play">Үнийн дүн:</span>
-                <span className="text-gray-900 font-bold text-right text-[12px] font-play">{formatMoney(totalPrice)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-800 font-medium text-[11px] font-play">Гүйлгээний утга:</span>
-                <span className="text-gray-900 font-bold text-right text-[12px] font-play">{phoneNumber}</span>
-              </div>
+              <div className="flex justify-between items-center"><span className="text-gray-800 font-medium text-[11px] font-play">Банк:</span><span className="text-gray-900 font-bold text-right text-[12px] font-play">Хаан банк</span></div>
+              <div className="flex justify-between items-center"><span className="text-gray-800 font-medium text-[11px] font-play">Дансны дугаар:</span><span className="text-gray-900 font-bold text-right text-[12px] font-play">5318101209</span></div>
+              <div className="flex justify-between items-center"><span className="text-gray-800 font-medium text-[11px] font-play">Үнийн дүн:</span><span className="text-gray-900 font-bold text-right text-[12px] font-play">{formatMoney(totalPrice)}</span></div>
+              <div className="flex justify-between items-center"><span className="text-gray-800 font-medium text-[11px] font-play">Гүйлгээний утга:</span><span className="text-gray-900 font-bold text-right text-[12px] font-play">{phoneNumber}</span></div>
             </div>
           </div>
         );
       
-      case 8: // Free Success
+      case 8: 
         return (
             <div className="flex flex-col items-center w-full justify-center h-full pt-2 pb-4">
-                 <div className="bg-white p-4 rounded-full mb-4 flex items-center justify-center animate-bounce-short">
-                    <Icons.Success />
-                 </div>
-                 
+                 <div className="bg-white p-4 rounded-full mb-4 flex items-center justify-center animate-bounce-short"><Icons.Success /></div>
                  <h3 className="text-[#068071] font-bold font-play text-lg mb-2">Амжилттай!</h3>
-                 <p className="text-[11px] text-center font-play text-gray-600 mb-4 px-6">
-                    Та "BONUS SUGLAA"-д амжилттай оролцлоо. Танд амжилт хүсье!
-                 </p>
-
+                 <p className="text-[11px] text-center font-play text-gray-600 mb-4 px-6">Та "BONUS SUGLAA"-д амжилттай оролцлоо. Танд амжилт хүсье!</p>
                  <div className="w-full flex flex-col items-center bg-gray-50 py-3 w-full">
-                    <p className="text-[10px] text-center font-play text-gray-500 mb-2">
-                        Таны азын дугаар:
-                    </p>
+                    <p className="text-[10px] text-center font-play text-gray-500 mb-2">Таны азын дугаар:</p>
                     <div className="flex flex-wrap justify-center gap-1 max-w-[320px]">
                         {luckyNumbers.map((num, idx) => (
-                            <span key={idx} className="bg-white text-[#068071] border border-[#068071] px-4 py-1 rounded-[6px] text-[16px] font-bold font-play shadow-sm">
-                                {num}
-                            </span>
+                            <span key={idx} className="bg-white text-[#068071] border border-[#068071] px-4 py-1 rounded-[6px] text-[16px] font-bold font-play shadow-sm">{num}</span>
                         ))}
                     </div>
                 </div>
@@ -593,11 +524,11 @@ const PurchaseDialog = ({
         `}
       </style>
       
-      <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 font-sans pt-[100px]">
+      <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 font-sans pt-[100px] px-4">
         <div 
-          className="bg-white relative flex flex-col shadow-2xl overflow-hidden transition-all duration-300 ease-in-out"
+          className="bg-white relative flex flex-col shadow-2xl overflow-hidden transition-all duration-300 ease-in-out w-full"
           style={{
-            width: '460px', 
+            maxWidth: '460px', 
             height: (currentStep === 6 || currentStep === 7 || currentStep === 8) ? 'auto' : '250px',
             minHeight: '250px',
             borderRadius: '20px',
@@ -618,22 +549,10 @@ const PurchaseDialog = ({
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/95 backdrop-blur-sm rounded-[20px]">
               <div className="text-center px-6">
                 <h3 className="font-play font-bold text-lg mb-2 text-black">Итгэлтэй байна уу?</h3>
-                <p className="font-play text-xs text-gray-600 mb-4">
-                  Худалдан авалтаа цуцлах гэж байна.<br/>Үргэлжлүүлэх үү?
-                </p>
+                <p className="font-play text-xs text-gray-600 mb-4">Худалдан авалтаа цуцлах гэж байна.<br/>Үргэлжлүүлэх үү?</p>
                 <div className="flex gap-3 justify-center">
-                  <button 
-                    onClick={() => setShowExitConfirm(false)}
-                    className="px-4 py-1.5 rounded-lg border border-gray-300 text-xs font-play text-gray-600 hover:bg-gray-50"
-                  >
-                    Үгүй
-                  </button>
-                  <button 
-                    onClick={confirmClose}
-                    className="px-4 py-1.5 rounded-lg bg-[#FF6060] text-xs font-play text-white hover:bg-[#ff4040]"
-                  >
-                    Тийм
-                  </button>
+                  <button onClick={() => setShowExitConfirm(false)} className="px-4 py-1.5 rounded-lg border border-gray-300 text-xs font-play text-gray-600 hover:bg-gray-50">Үгүй</button>
+                  <button onClick={confirmClose} className="px-4 py-1.5 rounded-lg bg-[#FF6060] text-xs font-play text-white hover:bg-[#ff4040]">Тийм</button>
                 </div>
               </div>
             </div>
@@ -642,19 +561,10 @@ const PurchaseDialog = ({
           {/* HEADER */}
           <div 
             className="w-full flex justify-between items-end relative" 
-            style={{ 
-                height: '65px', 
-                padding: '0 25px 8px 25px', 
-                borderBottom: '1px solid #D9D9D9',
-                flexShrink: 0,
-            }}
+            style={{ height: '65px', padding: '0 25px 8px 25px', borderBottom: '1px solid #D9D9D9', flexShrink: 0 }}
           >
-              <h2 className="font-play font-bold text-[20px] leading-[100%] text-black m-0">
-                  {getStepTitle()}
-              </h2>
-              <div className="font-play font-bold text-[20px] leading-[100%] text-[#068071]">
-                  {formatTimer(remainingSeconds)}
-              </div>
+              <h2 className="font-play font-bold text-[18px] sm:text-[20px] leading-[100%] text-black m-0">{getStepTitle()}</h2>
+              <div className="font-play font-bold text-[18px] sm:text-[20px] leading-[100%] text-[#068071]">{formatTimer(remainingSeconds)}</div>
           </div>
 
           {/* BODY */}
@@ -665,82 +575,40 @@ const PurchaseDialog = ({
           {/* FOOTER */}
           <div 
             className="w-full flex justify-between items-center relative" 
-            style={{ 
-                height: '50px', 
-                padding: '0 25px',
-                borderTop: '1px solid #D9D9D9',
-                flexShrink: 0
-            }}
+            style={{ height: '50px', padding: '0 25px', borderTop: '1px solid #D9D9D9', flexShrink: 0 }}
           >
-              {/* Prev Button */}
               <button
                   onClick={handleBack}
                   disabled={currentStep === 1 || isPaymentSuccess || currentStep === 8}
                   style={{
-                      width: '90px',
-                      height: '30px',
-                      borderRadius: '8px',
-                      border: '1px solid #D9D9D9',
-                      backgroundColor: '#FFFFFF',
-                      fontFamily: 'Play, sans-serif',
-                      fontWeight: 400,
-                      fontSize: '12px',
-                      color: '#969696',
+                      width: '90px', height: '30px', borderRadius: '8px', border: '1px solid #D9D9D9', backgroundColor: '#FFFFFF',
+                      fontFamily: 'Play, sans-serif', fontWeight: 400, fontSize: '12px', color: '#969696',
                       cursor: (currentStep === 1 || isPaymentSuccess || currentStep === 8) ? 'not-allowed' : 'pointer',
                       opacity: (currentStep === 1 || isPaymentSuccess || currentStep === 8) ? 0.6 : 1
                   }}
-              >
-                  Өмнөх
-              </button>
+              >Өмнөх</button>
 
-              {/* Next / Action Button */}
               <button
                   onClick={() => {
-                      if (currentStep === 6) { // QPay Scan
-                          if (isPaymentSuccess) onClose();
-                          else handleCheckPayment();
-                      } else if (currentStep === 7) { // Bank
-                          handleFinish();
-                      } else if (currentStep === 8) { // Free Success
-                          onClose();
-                      } else {
-                          handleNext();
-                      }
+                      if (currentStep === 6) { if (isPaymentSuccess) onClose(); else handleCheckPayment(); }
+                      else if (currentStep === 7) { handleFinish(); }
+                      else if (currentStep === 8) { onClose(); }
+                      else { handleNext(); }
                   }}
-                  disabled={
-                      (currentStep === 1 && !isPhoneValid) || 
-                      (currentStep === 2 && (!isOtpValid && !isOtpExpired)) || // Step 2 logic modified to allow click only if valid, but if expired button doesn't do "next" logic anyway
-                      isLoading
-                  }
+                  disabled={(currentStep === 1 && !isPhoneValid) || (currentStep === 2 && (!isOtpValid && !isOtpExpired)) || isLoading}
                   style={{
-                      width: (currentStep === 6) ? 'auto' : '90px', 
-                      minWidth: '90px',
-                      padding: currentStep === 6 ? '0 10px' : '0',
-                      height: '30px',
-                      borderRadius: '8px',
-                      border: '1px solid #D9D9D9',
+                      width: (currentStep === 6) ? 'auto' : '90px', minWidth: '90px', padding: currentStep === 6 ? '0 10px' : '0',
+                      height: '30px', borderRadius: '8px', border: '1px solid #D9D9D9',
                       backgroundColor: (isPaymentSuccess || currentStep === 8) ? '#068071' : '#FFFFFF',
-                      fontFamily: 'Play, sans-serif',
-                      fontWeight: 400,
-                      fontSize: '12px',
+                      fontFamily: 'Play, sans-serif', fontWeight: 400, fontSize: '12px',
                       color: (isPaymentSuccess || currentStep === 8) ? '#FFFFFF' : '#057F71', 
                       cursor: ((currentStep === 1 && !isPhoneValid) || (currentStep === 2 && !isOtpValid) || isLoading) ? 'not-allowed' : 'pointer',
                       opacity: ((currentStep === 1 && !isPhoneValid) || (currentStep === 2 && !isOtpValid) || isLoading) ? 0.6 : 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '5px'
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
                   }}
               >
-                  {currentStep === 6 ? (
-                      isLoading ? <Icons.Loader /> : (isPaymentSuccess ? "Хаах" : "Төлбөр шалгах")
-                  ) : currentStep === 7 ? (
-                      "Дуусгах"
-                  ) : currentStep === 8 ? (
-                      "Хаах"
-                  ) : (
-                      isLoading ? <Icons.Loader /> : "Дараах"
-                  )}
+                  {currentStep === 6 ? (isLoading ? <Icons.Loader /> : (isPaymentSuccess ? "Хаах" : "Төлбөр шалгах")) : 
+                   currentStep === 7 ? "Дуусгах" : currentStep === 8 ? "Хаах" : (isLoading ? <Icons.Loader /> : "Дараах")}
               </button>
           </div>
         </div>
