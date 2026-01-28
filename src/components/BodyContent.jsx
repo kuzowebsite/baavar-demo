@@ -1,7 +1,7 @@
 // src/components/BodyContent.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, Pagination, Autoplay, Navigation } from 'swiper/modules'; 
+import { EffectCoverflow, Pagination, Autoplay, Navigation, Mousewheel } from 'swiper/modules'; 
 import PurchaseDialog from './PurchaseDialog'; 
 
 import 'swiper/css';
@@ -40,8 +40,9 @@ const BodyContent = ({ onLottoClick }) => {
         if (windowWidth >= 740) {
             setMobileSlideSize({ width: 330, height: 420 });
         } else {
+            // Утас дээрх картын хэмжээ
             const mWidth = Math.min(windowWidth * 0.70, 270); 
-            const mHeight = mWidth * 1.25; 
+            const mHeight = mWidth * 1.35; // Өндрийг бага зэрэг нэмэв
             setMobileSlideSize({ width: mWidth, height: mHeight });
         }
 
@@ -79,11 +80,11 @@ const BodyContent = ({ onLottoClick }) => {
   const SLIDE_WIDTH_ACTIVE = isMobile ? mobileSlideSize.width : DESKTOP_SLIDE_WIDTH;
   const SLIDE_HEIGHT_ACTIVE = isMobile ? mobileSlideSize.height : DESKTOP_SLIDE_HEIGHT;
   
-  const RATIO = isMobile ? 0.79 : 0.80; 
-  const SHIFT_DOWN = isMobile ? 0 : 0; 
+  const RATIO = isMobile ? 0.75 : 0.80; 
+  const SHIFT_DOWN = 0; 
 
-  const IMAGE_HEIGHT_ACTIVE = Math.round(SLIDE_HEIGHT_ACTIVE * RATIO) - SHIFT_DOWN; 
-  const CONTENT_HEIGHT = SLIDE_HEIGHT_ACTIVE - Math.round(SLIDE_HEIGHT_ACTIVE * RATIO); 
+  const IMAGE_HEIGHT_ACTIVE = Math.round(SLIDE_HEIGHT_ACTIVE * RATIO); 
+  const CONTENT_HEIGHT = SLIDE_HEIGHT_ACTIVE - IMAGE_HEIGHT_ACTIVE; 
   
   const CONTAINER_HEIGHT = 760;
 
@@ -109,7 +110,13 @@ const BodyContent = ({ onLottoClick }) => {
               top: 0 !important;
           }
 
-          .custom-swiper { width: 100%; height: 100%; padding-top: 20px; padding-bottom: 20px; overflow: visible !important; }
+          .custom-swiper { 
+            width: 100%; 
+            height: 100%; 
+            padding-top: 20px; 
+            padding-bottom: 20px; 
+            overflow: visible !important; 
+          }
           .swiper-wrapper { 
               align-items: center; 
               transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1) !important;
@@ -120,7 +127,7 @@ const BodyContent = ({ onLottoClick }) => {
               height: ${isMobile ? mobileSlideSize.height * 0.85 : 420}px !important; 
               transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease, filter 0.8s ease; 
               filter: blur(4px); 
-              opacity: 0.8; 
+              opacity: 0.6; 
               border-radius: ${isMobile ? '20px' : '70px'} !important; 
               overflow: hidden; 
               user-select: none; 
@@ -140,9 +147,9 @@ const BodyContent = ({ onLottoClick }) => {
               height: ${SLIDE_HEIGHT_ACTIVE}px !important; 
               filter: blur(0px) !important; 
               opacity: 1 !important; 
-              z-index: 50 !important; 
+              z-index: 100 !important; 
               background-color: transparent; 
-              box-shadow: 0 15px 40px rgba(0,0,0,0.25); 
+              box-shadow: 0 15px 40px rgba(0,0,0,0.35); 
               border-radius: ${isMobile ? '20px' : '70px'} !important;
           }
           
@@ -155,126 +162,60 @@ const BodyContent = ({ onLottoClick }) => {
           }
           
           .nav-btn { 
-              width: 56px; 
-              height: 56px; 
-              border-radius: 50%; 
-              border: 2px solid #5F7D74; 
-              display: flex; 
-              align-items: center; 
-              justify-content: center; 
-              cursor: pointer; 
-              transition: all 0.2s; 
-              background: rgba(255,255,255,0.1); 
+              width: 56px; height: 56px; border-radius: 50%; border: 2px solid #5F7D74; 
+              display: flex; align-items: center; justify-content: center; 
+              cursor: pointer; transition: all 0.2s; background: rgba(255,255,255,0.1); 
           }
           .nav-btn:hover { background: #5F7D74; border-color: #5F7D74; }
           .nav-btn:hover svg { stroke: white; }
           .nav-btn svg { stroke: #2F4F4F; stroke-width: 2.5; }
 
-          /* TABLET SPECIFIC */
-          @media (min-width: 740px) and (max-width: 1023px) {
-              .mobile-title {
-                  margin-top: 50px !important; 
-                  font-size: 27px !important; 
-                  margin-bottom: 25px !important;
-              }
-              .mobile-subtitle {
-                  margin-top: 10px !important;
-                  margin-bottom: 30px !important;
-                  font-size: 26px !important;
-              }
-              .mobile-host-container img {
-                  height: 620px !important; 
-                  transform: translateY(0px) scale(1.1) !important; 
-              }
-              .mobile-host-container {
-                    margin-left: -10px !important; 
-                    margin-top: -130px !important; 
-              }
-              .nav-btn { width: 56px !important; height: 56px !important; }
-          }
-
-          /* IPAD PRO SPECIFIC */
-          @media (min-width: 1024px) and (max-width: 1024px) {
-               .mobile-title {
-                  margin-top: 80px !important; 
-                  font-size: 32px !important; 
-                  margin-bottom: 30px !important;
-              }
-              .mobile-subtitle {
-                  margin-top: 15px !important;
-                  margin-bottom: 40px !important;
-                  font-size: 28px !important;
-              }
-              .mobile-host-container img {
-                  height: 600px !important; 
-                  transform: translateY(0px) scale(1.1) !important; 
-              }
-              .mobile-host-container {
-                    margin-left: -80px !important; 
-                    margin-top: -30px !important; 
-              }
-              .nav-btn { width: 64px !important; height: 64px !important; }
-              .swiper-container-wrapper { margin-top: 40px !important; }
-          }
-
-          /* STANDARD MOBILE */
           @media (max-width: 739px) {
-              .custom-swiper {
-                  padding-top: 10px !important; 
-                  padding-bottom: 10px !important; 
-              }
-              .mobile-title {
-                  font-size: 24px !important;
-                  margin-bottom: 0px; 
-                  margin-top: 0px; 
-              }
-              .mobile-main-container {
-                  padding-top: 80px !important;
-                  height: auto !important; /* Allow growing */
-                  overflow-y: auto !important; /* Enable Native Scroll */
-              }
+              .custom-swiper { padding-top: 0px !important; padding-bottom: 0px !important; }
+              .mobile-title { font-size: 24px !important; margin-bottom: 5px; margin-top: 10px; }
+              /* Main container дээрх overflow тохиргоог хянах */
+              body, html { overflow-x: hidden; }
           }
         `}
       </style>
 
       {/* Main Container */}
-      <div className={`w-full relative flex ${isMobile ? 'mobile-main-container' : 'overflow-hidden'}`} 
+      <div className={`w-full relative flex`} 
            style={{ 
-               height: isPhone ? 'auto' : '100%', 
+               // Phone үед 100vh буюу дэлгэцийг дүүргэнэ
+               height: isPhone ? '100vh' : '100%', 
                minHeight: isMobile ? '100vh' : '600px', 
-               flexGrow: 1,
                flexDirection: 'column', 
-               justifyContent: isMobile ? 'flex-start' : 'center', 
+               justifyContent: isPhone ? 'flex-start' : (isMobile ? 'flex-start' : 'center'), 
                alignItems: 'center',
-               paddingTop: isMobile ? '100px' : '0',
-               overflowY: isPhone ? 'auto' : 'hidden'
+               paddingTop: isMobile ? '80px' : '0',
+               overflow: 'hidden'
            }}>
           
           <div className="relative" 
                style={{ 
                    width: isMobile ? '100%' : '1920px', 
-                   height: isMobile ? 'auto' : `${CONTAINER_HEIGHT}px`, 
+                   // Phone үед flex ашиглах тул өндрийг 100% болгоно
+                   height: isPhone ? '100%' : (isMobile ? '100%' : `${CONTAINER_HEIGHT}px`), 
                    transform: isMobile ? 'none' : `scale(${scale})`, 
                    transformOrigin: 'center center',
-                   display: 'flex',
-                   flexDirection: isMobile ? 'column' : 'block',
+                   display: isPhone ? 'flex' : (isMobile ? 'flex' : 'block'),
+                   flexDirection: isMobile ? 'column' : 'row',
                    alignItems: 'center'
                }}>
             
-            {/* ГАРЧИГ */}
-            <div className={isMobile ? "w-full flex flex-col items-center justify-center z-10 px-4 mb-2" : "absolute w-full flex justify-center z-10"} 
-                 style={{ top: isMobile ? '0' : '50px' }}>
+            {/* ГАРЧИГ - PHONE дээр HEADER шиг ажиллана (тогтмол өндөр) */}
+            <div className={isMobile ? "w-full flex flex-col items-center justify-center z-50 px-4 shrink-0" : "absolute w-full flex justify-center z-10"} 
+                 style={{ 
+                     top: isMobile ? 'auto' : '50px', 
+                     position: isPhone ? 'relative' : (isMobile ? 'relative' : 'absolute'),
+                     paddingBottom: isPhone ? '10px' : '0'
+                 }}>
                 <h1 className="mobile-title"
                     style={{ 
-                        fontFamily: 'Roboto, sans-serif', 
-                        fontWeight: 900, 
-                        fontSize: '36px', 
-                        textTransform: 'uppercase', 
-                        color: '#000000', 
-                        letterSpacing: '1px', 
-                        margin: 0,
-                        textAlign: 'center',
-                        lineHeight: 1.2
+                        fontFamily: 'Roboto, sans-serif', fontWeight: 900, fontSize: '36px', 
+                        textTransform: 'uppercase', color: '#000000', letterSpacing: '1px', 
+                        margin: 0, textAlign: 'center', lineHeight: 1.2
                     }}>
                     Монголын хамгийн том хонжворт сугалаа
                 </h1>
@@ -282,7 +223,7 @@ const BodyContent = ({ onLottoClick }) => {
                 {isMobile && !isPhone && (
                     <h2 className="mobile-subtitle" style={{
                         fontFamily: 'Roboto, sans-serif', fontWeight: 900, fontSize: '20px',
-                        color: '#333333', textTransform: 'uppercase', margin: '60px 0 0 0', textAlign: 'center'
+                        color: '#333333', textTransform: 'uppercase', margin: '30px 0 0 0', textAlign: 'center'
                     }}>
                         Сугалаанууд:
                     </h2>
@@ -309,125 +250,101 @@ const BodyContent = ({ onLottoClick }) => {
             )}
 
             {/* ========================================================= */}
-            {/* SWIPER CONTAINER (Only for Desktop and Tablets)           */}
+            {/* SWIPER CONTAINER                                          */}
             {/* ========================================================= */}
-            {!isPhone && (
-                <div className={`${isMobile ? "w-full relative swiper-container-wrapper" : "absolute w-full"}`} 
-                     style={{ 
-                          top: isMobile ? '0' : '120px', 
-                          height: isMobile ? `${mobileSlideSize.height}px` : '700px',
-                          marginTop: isMobile ? '20px' : '0'
-                     }}>
-                    
-                    {/* Tablet Navigation */}
-                    {isMobile && (
-                        <>
-                            <div className="nav-btn prev-btn absolute" onClick={() => swiperRef?.slidePrev()}
-                                style={{ zIndex: 60, left: '10px', top: '50%', transform: 'translateY(-50%)', width: '40px', height: '40px', backgroundColor: 'rgba(255,255,255,0.8)', border: '1px solid #ccc' }}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                            </div>
-                            <div className="nav-btn next-btn absolute" onClick={() => swiperRef?.slideNext()}
-                                style={{ zIndex: 60, right: '10px', top: '50%', transform: 'translateY(-50%)', width: '40px', height: '40px', backgroundColor: 'rgba(255,255,255,0.8)', border: '1px solid #ccc' }}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                            </div>
-                        </>
-                    )}
-
-                    <Swiper
-                        onSwiper={setSwiperRef}
-                        direction={'horizontal'} 
-                        effect={'coverflow'}
-                        grabCursor={true}
-                        centeredSlides={true}
-                        centeredSlidesBounds={true}
-                        slidesPerView={'auto'}
-                        loop={true}
-                        speed={1000}
-                        slidesPerGroup={1} 
-                        spaceBetween={isMobile ? 50 : 60}
-                        slideToClickedSlide={true}
-                        autoplay={{ delay: 3500, disableOnInteraction: false }}
-                        coverflowEffect={{ rotate: 0, stretch: 0, depth: isMobile ? 80 : 150, modifier: 1.5, slideShadows: false }}
-                        modules={[EffectCoverflow, Pagination, Autoplay, Navigation]}
-                        className="custom-swiper"
-                    >
-                        {displayList.map((item) => (
-                            <SwiperSlide key={item.uniqueId}>
-                                {({ isActive }) => (
-                                    // ӨӨРЧИЛСӨН: cursor-pointer болон onClick нэмсэн
-                                    <div className="relative w-full h-full bg-white transition-all duration-500 cursor-pointer" 
-                                         onClick={() => handlePurchaseClick(item)}
-                                         style={{ 
-                                              borderRadius: isMobile ? '20px' : '70px',
-                                              paddingTop: isMobile ? `${SHIFT_DOWN}px` : '0', 
-                                              boxSizing: 'border-box' 
-                                         }}>
-                                            {/* IMAGE - Padding removed here */}
-                                            <div style={{ 
-                                                height: isActive ? `${IMAGE_HEIGHT_ACTIVE}px` : '100%', 
-                                                width: '100%', position: 'relative', overflow: 'hidden',
-                                                paddingBottom: '0' 
-                                            }}>
-                                                <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-all duration-500"
-                                                    style={{ display: 'block', objectPosition: 'center bottom',
-                                                        borderTopLeftRadius: isMobile ? '20px' : '70px', borderTopRightRadius: isMobile ? '20px' : '70px'
-                                                    }} />
-                                            </div>
-
-                                            {/* CONTENT (Active only) */}
-                                            {isActive && (
-                                                <CardContent item={item} isMobile={isMobile} CONTENT_HEIGHT={CONTENT_HEIGHT} handlePurchaseClick={handlePurchaseClick} />
-                                            )}
-                                    </div>
-                                )}
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </div>
-            )}
-
-            {/* ========================================================= */}
-            {/* PHONE FEED VIEW (Зөвхөн утсан дээр энгийн жагсаалт)       */}
-            {/* ========================================================= */}
-            {isPhone && (
-                <div className="w-full flex flex-col items-center gap-8 pb-20 mt-4">
-                    {baseLottoList.map((item, index) => (
-                        // ӨӨРЧИЛСӨН: cursor-pointer болон onClick нэмсэн
-                        <div key={`${item.id}-feed-${index}`} 
-                             className="relative bg-transparent shadow-[0_15px_40px_rgba(0,0,0,0.25)] cursor-pointer"
-                             onClick={() => handlePurchaseClick(item)}
-                             style={{
-                                 width: `${mobileSlideSize.width}px`,
-                                 height: `${mobileSlideSize.height}px`,
-                                 borderRadius: '20px',
-                             }}>
-                             
-                             {/* IMAGE SECTION - Padding removed here too */}
-                             <div style={{ 
-                                     height: `${IMAGE_HEIGHT_ACTIVE}px`, 
-                                     width: '100%', 
-                                     position: 'relative', 
-                                     overflow: 'hidden',
-                                     paddingBottom: '0' 
-                                 }}>
-                                     <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover"
-                                         style={{ 
-                                             display: 'block', 
-                                             objectPosition: 'center bottom',
-                                             borderTopLeftRadius: '20px', 
-                                             borderTopRightRadius: '20px'
-                                         }} 
-                                     />
-                             </div>
-
-                             {/* CONTENT SECTION (Always Visible on Feed) */}
-                             <CardContent item={item} isMobile={true} CONTENT_HEIGHT={CONTENT_HEIGHT} handlePurchaseClick={handlePurchaseClick} />
+            <div className={`${isMobile ? "w-full relative swiper-container-wrapper" : "absolute w-full"}`} 
+                 style={{ 
+                      // ЗАСВАР: Phone үед flex-grow: 1 болон height: 100% өгч байна
+                      flexGrow: isPhone ? 1 : 0,
+                      height: isPhone ? '100%' : (isMobile ? `${mobileSlideSize.height}px` : '700px'),
+                      minHeight: isPhone ? '0' : 'auto', // Flex item collapse-оос сэргийлэх
+                      
+                      top: isMobile ? '0' : '120px', 
+                      marginTop: isMobile ? '0px' : '0',
+                      
+                      display: 'flex', // Flex болгож төвлөрүүлнэ
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                 }}>
+                
+                {/* Tablet Navigation */}
+                {isMobile && !isPhone && (
+                    <>
+                        <div className="nav-btn prev-btn absolute" onClick={() => swiperRef?.slidePrev()}
+                            style={{ zIndex: 60, left: '10px', top: '50%', transform: 'translateY(-50%)', width: '40px', height: '40px', backgroundColor: 'rgba(255,255,255,0.8)', border: '1px solid #ccc' }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
                         </div>
-                    ))}
-                </div>
-            )}
+                        <div className="nav-btn next-btn absolute" onClick={() => swiperRef?.slideNext()}
+                            style={{ zIndex: 60, right: '10px', top: '50%', transform: 'translateY(-50%)', width: '40px', height: '40px', backgroundColor: 'rgba(255,255,255,0.8)', border: '1px solid #ccc' }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </div>
+                    </>
+                )}
 
-            {/* Host Image - TABLET ONLY (isPhone үед харагдахгүй) */}
+                <Swiper
+                    onSwiper={setSwiperRef}
+                    direction={isPhone ? 'vertical' : 'horizontal'} 
+                    effect={'coverflow'}
+                    grabCursor={true}
+                    centeredSlides={true}
+                    centeredSlidesBounds={true}
+                    slidesPerView={'auto'}
+                    loop={true}
+                    speed={600} 
+                    mousewheel={isPhone ? true : false} 
+                    slidesPerGroup={1} 
+                    spaceBetween={isMobile ? (isPhone ? 0 : 50) : 60} 
+                    slideToClickedSlide={true}
+                    autoplay={{ delay: 3500, disableOnInteraction: false }}
+                    coverflowEffect={{ 
+                        rotate: isPhone ? 0 : 0, 
+                        stretch: isPhone ? 80 : 0, // Босоо үед зайг ихэсгэв
+                        depth: isMobile ? (isPhone ? 200 : 80) : 150, 
+                        modifier: 1, 
+                        slideShadows: false 
+                    }}
+                    modules={[EffectCoverflow, Pagination, Autoplay, Navigation, Mousewheel]}
+                    className="custom-swiper"
+                    style={{
+                        // ЗАСВАР: Swiper өөрөө 100% өндөртэй байх ёстой
+                        height: '100%',
+                        width: '100%'
+                    }}
+                >
+                    {displayList.map((item) => (
+                        <SwiperSlide key={item.uniqueId}>
+                            {({ isActive }) => (
+                                <div className="relative w-full h-full bg-white transition-all duration-500 cursor-pointer" 
+                                     onClick={() => handlePurchaseClick(item)}
+                                     style={{ 
+                                          borderRadius: isMobile ? '20px' : '70px',
+                                          boxSizing: 'border-box',
+                                          overflow: 'hidden'
+                                     }}>
+                                      {/* IMAGE */}
+                                      <div style={{ 
+                                          height: isActive ? `${IMAGE_HEIGHT_ACTIVE}px` : '100%', 
+                                          width: '100%', position: 'relative', overflow: 'hidden',
+                                          paddingBottom: '0' 
+                                      }}>
+                                          <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-all duration-500"
+                                              style={{ display: 'block', objectPosition: 'center bottom',
+                                                  borderTopLeftRadius: isMobile ? '20px' : '70px', borderTopRightRadius: isMobile ? '20px' : '70px'
+                                              }} />
+                                      </div>
+
+                                      {/* CONTENT */}
+                                      {isActive && (
+                                          <CardContent item={item} isMobile={isMobile} CONTENT_HEIGHT={CONTENT_HEIGHT} handlePurchaseClick={handlePurchaseClick} />
+                                      )}
+                                  </div>
+                            )}
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            </div>
+
+            {/* Host Image - TABLET ONLY */}
             {isMobile && !isPhone && (
                 <div className="w-full flex justify-start items-end mt-4 relative z-0 mobile-host-container"
                      style={{ marginTop: '1px', marginLeft: '-100px', transform: 'translateY(0px)' }}>
@@ -454,7 +371,7 @@ const BodyContent = ({ onLottoClick }) => {
   );
 };
 
-// ТУСЛАХ COMPONENT: Кард доторх мэдээллийн хэсэг
+// CardContent component хэвээрээ...
 const CardContent = ({ item, isMobile, CONTENT_HEIGHT, handlePurchaseClick }) => {
     return (
         <div className="relative w-full bg-white flex flex-col items-center" 
@@ -465,7 +382,6 @@ const CardContent = ({ item, isMobile, CONTENT_HEIGHT, handlePurchaseClick }) =>
                 paddingBottom: isMobile ? '5px' : '20px' 
             }}>
             
-            {/* Progress Bar */}
             <div className="w-full relative h-[8px] md:h-[10px] bg-[#E0E0E0]">
                 <div style={{ width: `${item.fillPercent}%` }} className="h-full bg-[#BAD301] relative">
                     <div className="absolute shadow-sm" 
