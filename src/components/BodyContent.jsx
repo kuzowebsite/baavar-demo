@@ -42,7 +42,7 @@ const BodyContent = ({ onLottoClick }) => {
         } else {
             // Утас дээрх картын хэмжээ
             const mWidth = Math.min(windowWidth * 0.70, 270); 
-            const mHeight = mWidth * 1.35; // Өндрийг бага зэрэг нэмэв
+            const mHeight = mWidth * 1.35; 
             setMobileSlideSize({ width: mWidth, height: mHeight });
         }
 
@@ -173,7 +173,6 @@ const BodyContent = ({ onLottoClick }) => {
           @media (max-width: 739px) {
               .custom-swiper { padding-top: 0px !important; padding-bottom: 0px !important; }
               .mobile-title { font-size: 24px !important; margin-bottom: 5px; margin-top: 10px; }
-              /* Main container дээрх overflow тохиргоог хянах */
               body, html { overflow-x: hidden; }
           }
         `}
@@ -182,7 +181,6 @@ const BodyContent = ({ onLottoClick }) => {
       {/* Main Container */}
       <div className={`w-full relative flex`} 
            style={{ 
-               // Phone үед 100vh буюу дэлгэцийг дүүргэнэ
                height: isPhone ? '100vh' : '100%', 
                minHeight: isMobile ? '100vh' : '600px', 
                flexDirection: 'column', 
@@ -195,7 +193,6 @@ const BodyContent = ({ onLottoClick }) => {
           <div className="relative" 
                style={{ 
                    width: isMobile ? '100%' : '1920px', 
-                   // Phone үед flex ашиглах тул өндрийг 100% болгоно
                    height: isPhone ? '100%' : (isMobile ? '100%' : `${CONTAINER_HEIGHT}px`), 
                    transform: isMobile ? 'none' : `scale(${scale})`, 
                    transformOrigin: 'center center',
@@ -204,7 +201,7 @@ const BodyContent = ({ onLottoClick }) => {
                    alignItems: 'center'
                }}>
             
-            {/* ГАРЧИГ - PHONE дээр HEADER шиг ажиллана (тогтмол өндөр) */}
+            {/* ГАРЧИГ */}
             <div className={isMobile ? "w-full flex flex-col items-center justify-center z-50 px-4 shrink-0" : "absolute w-full flex justify-center z-10"} 
                  style={{ 
                      top: isMobile ? 'auto' : '50px', 
@@ -249,20 +246,17 @@ const BodyContent = ({ onLottoClick }) => {
                 </div>
             )}
 
-            {/* ========================================================= */}
-            {/* SWIPER CONTAINER                                          */}
-            {/* ========================================================= */}
+            {/* SWIPER CONTAINER */}
             <div className={`${isMobile ? "w-full relative swiper-container-wrapper" : "absolute w-full"}`} 
                  style={{ 
-                      // ЗАСВАР: Phone үед flex-grow: 1 болон height: 100% өгч байна
                       flexGrow: isPhone ? 1 : 0,
                       height: isPhone ? '100%' : (isMobile ? `${mobileSlideSize.height}px` : '700px'),
-                      minHeight: isPhone ? '0' : 'auto', // Flex item collapse-оос сэргийлэх
+                      minHeight: isPhone ? '0' : 'auto', 
                       
                       top: isMobile ? '0' : '120px', 
                       marginTop: isMobile ? '0px' : '0',
                       
-                      display: 'flex', // Flex болгож төвлөрүүлнэ
+                      display: 'flex', 
                       alignItems: 'center',
                       justifyContent: 'center'
                  }}>
@@ -298,7 +292,7 @@ const BodyContent = ({ onLottoClick }) => {
                     autoplay={{ delay: 3500, disableOnInteraction: false }}
                     coverflowEffect={{ 
                         rotate: isPhone ? 0 : 0, 
-                        stretch: isPhone ? 80 : 0, // Босоо үед зайг ихэсгэв
+                        stretch: isPhone ? 80 : 0, 
                         depth: isMobile ? (isPhone ? 200 : 80) : 150, 
                         modifier: 1, 
                         slideShadows: false 
@@ -306,7 +300,6 @@ const BodyContent = ({ onLottoClick }) => {
                     modules={[EffectCoverflow, Pagination, Autoplay, Navigation, Mousewheel]}
                     className="custom-swiper"
                     style={{
-                        // ЗАСВАР: Swiper өөрөө 100% өндөртэй байх ёстой
                         height: '100%',
                         width: '100%'
                     }}
@@ -343,6 +336,22 @@ const BodyContent = ({ onLottoClick }) => {
                     ))}
                 </Swiper>
             </div>
+
+            {/* FOOTER TEXT - ЗӨВХӨН УТАС ДЭЭР */}
+            {isPhone && (
+                <div className="w-full text-center py-2 pb-4 shrink-0 z-10" style={{ position: 'relative' }}>
+                    <p style={{
+                        fontSize: '12px',
+                        color: '#000000',
+                        margin: 0,
+                        fontFamily: 'Roboto, sans-serif',
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase'
+                    }}>
+                        Сангийн яамны зөвшөөрөлтэй сугалаа
+                    </p>
+                </div>
+            )}
 
             {/* Host Image - TABLET ONLY */}
             {isMobile && !isPhone && (
